@@ -5,6 +5,7 @@ import Http
 import Json.Decode as Decode
 import Maps
 import Maps.Map as Map
+import Maps.Geo
 
 
 
@@ -29,13 +30,14 @@ type alias Model =
   , map : Lol
   }
 
-
 init : String -> (Model, Cmd Msg)
 init topic =
   ( { topic = topic
   , gifUrl = "waiting.gif"
   , cameraStations = []
   , map = Maps.defaultModel
+      |> Maps.updateMap (Map.moveTo (Maps.Geo.latLng 64.865143 26.209900))
+      |> Maps.updateMap (Map.setZoom 5)
       |> Maps.updateMap (Map.setHeight 600)
       |> Maps.updateMap (Map.setWidth 900)}
   , getRandomGif topic
