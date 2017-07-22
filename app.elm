@@ -49,7 +49,7 @@ update msg model =
       (model, getRandomGif model.topic)
 
     NewGif (Ok newUrl) ->
-      (Model model.gifUrl newUrl, Cmd.none)
+      ({model | gifUrl = newUrl}, Cmd.none)
 
     NewGif (Err _) ->
       (model, Cmd.none)
@@ -65,7 +65,7 @@ view : Model -> Html Msg
 view model =
   div []
     [ input [ placeholder "Type topic here", onInput Change ] []
-    --, span [] [ text (toString model)]
+    -- , span [] [ text (toString model)]
     , button [ onClick MorePlease ] [ text "More Please!" ]
     , br [] []
     , img [src model.gifUrl] []
