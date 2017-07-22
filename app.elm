@@ -37,7 +37,7 @@ init topic =
   , cameraStations = []
   , map = Maps.defaultModel
       |> Maps.updateMap (Map.setHeight 600)
-      |> Maps.updateMap (Map.setWidth 1000)}
+      |> Maps.updateMap (Map.setWidth 900)}
   , getRandomGif topic
   )
 
