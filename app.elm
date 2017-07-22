@@ -22,12 +22,13 @@ main =
 type alias Model =
   { topic : String
   , gifUrl : String
+  , cameraStations : List String
   }
 
 
 init : String -> (Model, Cmd Msg)
 init topic =
-  ( Model topic "waiting.gif"
+  ( Model topic "waiting.gif" []
   , getRandomGif topic
   )
 
@@ -65,7 +66,7 @@ view : Model -> Html Msg
 view model =
   div []
     [ input [ placeholder "Type topic here", onInput Change ] []
-    -- , span [] [ text (toString model)]
+    , span [] [ text (toString model)]
     , button [ onClick MorePlease ] [ text "More Please!" ]
     , br [] []
     , img [src model.gifUrl] []
@@ -89,7 +90,7 @@ getRandomGif : String -> Cmd Msg
 getRandomGif topic =
   let
     url =
-      "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" ++ topic
+      "https://tie.digitraffic.fi/api/v1/metadata/camera-stations?lastUpdated=false"
   in
     Http.send NewGif (Http.get url decodeGifUrl)
 
