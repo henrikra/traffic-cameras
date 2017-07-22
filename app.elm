@@ -100,7 +100,7 @@ getRandomGif topic =
 type alias CameraStation =
   { id : String
     , lollero: String
-    , geometry : Geometry
+    , geometry : Maybe Geometry
   }
 
 type alias Geometry =
@@ -117,7 +117,7 @@ personDecoder =
   Decode.map3 CameraStation
     (Decode.field "id" Decode.string)
     (Decode.field "type" Decode.string)
-    (Decode.field "geometry" geometryDecoder)
+    (Decode.field "geometry" (Decode.maybe geometryDecoder))
 
 decodeGifUrl : Decode.Decoder (List CameraStation)
 decodeGifUrl =
