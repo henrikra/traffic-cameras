@@ -39,7 +39,7 @@ init topic =
 
 type Msg
   = MorePlease
-  | NewGif (Result Http.Error String)
+  | NewGif (Result Http.Error (List CameraStation))
   | Change String
 
 
@@ -50,10 +50,12 @@ update msg model =
       (model, getRandomGif model.topic)
 
     NewGif (Ok newUrl) ->
-      ({model | gifUrl = newUrl}, Cmd.none)
-
-    NewGif (Err _) ->
+    let lol = Debug.log "heppp" newUrl
+    in
       (model, Cmd.none)
+
+    NewGif (Err error) ->
+      ({model | topic = Debug.log "heps" (toString error)}, Cmd.none)
 
     Change newContent ->
       ({model | topic = newContent}, Cmd.none)
@@ -66,7 +68,7 @@ view : Model -> Html Msg
 view model =
   div []
     [ input [ placeholder "Type topic here", onInput Change ] []
-    , span [] [ text (toString model)]
+    -- , span [] [ text (toString model)]
     , button [ onClick MorePlease ] [ text "More Please!" ]
     , br [] []
     , img [src model.gifUrl] []
@@ -95,6 +97,22 @@ getRandomGif topic =
     Http.send NewGif (Http.get url decodeGifUrl)
 
 
-decodeGifUrl : Decode.Decoder String
+type alias CameraStation =
+  {
+    id : String,
+    lollero: String
+  }
+
+personDecoder: Decode.Decoder CameraStation
+personDecoder =
+  Decode.map2 CameraStation
+    (Decode.field "id" Decode.string)
+    (Decode.field "type" Decode.string)
+
+-- personListDecoder : Decode.Decoder (List CameraStation)
+-- personListDecoder =
+--   Decode.list personDecoder
+
+decodeGifUrl : Decode.Decoder (List CameraStation)
 decodeGifUrl =
-  Decode.at ["data", "image_url"] Decode.string
+  Decode.at ["features"] (Decode.list personDecoder)
